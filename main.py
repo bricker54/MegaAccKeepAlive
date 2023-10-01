@@ -1,45 +1,25 @@
-# Keep Mega Accounts Active
-# mega deletes inactive accounts
-# reads credentials from a file called accounts.csv
-# run this once a month to be safe (you'll forget so setup a systemd timer or cron)
+import requests
+from mega import Mega
+input("Warning! This will take an stupidly long time to finish. Press Enter to continue...")
+GigabyteTotalVal = 0.00
+try:
+    response = requests.get('https://meganzindex.000webhostapp.com/MegaAccess/MegaAccessData.data', auth=('TheVaultUsr', 'R0Y04>2~3[Pu!ch;;@yGjY%HVa>-vO[+0Ryq|#<bLi+VH*lhKl'))
+    response.raise_for_status()  # Raise an exception if the request was not successful
 
-import csv
-import subprocess
+    # Split the content of the webpage into lines
+    lines = response.text.split('\n') 
 
+    # Iterate through the lines and print each one
+    for i in range(len(i)):
+        mega = Mega()
+        CurrentRequest = lines[i].strip()
+        m = mega.login(CurrentRequest, "MultiupSucksAss54@#")
+        quota = m.get_quota()
+        MBVal = float(quota)
+        MBVal = MBVal / 1000
+        GigabyteTotalVal = GigabyteTotalVal + MBVal
+    
+    print("Total Space: "+str(GigabyteTotalVal)+" GB")
 
-def main():
-    with open("accounts.csv") as csvfile:
-        csvreader = csv.reader(csvfile)
-        for row in csvreader:
-            if not row:
-                continue
-
-            # CSV Format
-            # email, email_id, email_password, name, email:password, purpose
-            print(row)
-
-            email = row[4].split(":")[0].strip()
-            password = row[4].split(":")[1].strip()
-
-            # login
-            login = subprocess.run(
-                [
-                    "megatools",
-                    "ls",
-                    "-u",
-                    email,
-                    "-p",
-                    password,
-                ],
-                universal_newlines=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-            )
-            if "/Root" in login.stdout:
-                print("Logged In", email)
-            else:
-                print("Error", email)
-
-
-if __name__ == "__main__":
-    main()
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
